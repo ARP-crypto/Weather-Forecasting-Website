@@ -24,9 +24,13 @@ UI DESIGNED USING FIGMA:
 
 <img width="959" height="563" alt="Screenshot 2026-09-12 135743" src="https://github.com/user-attachments/assets/d357ff15-2b18-4591-a3cc-dac3e00cdf12" />
 
+
+
 coding in VSCODE(HTML)
 
 <img width="959" height="571" alt="Screenshot 2026-09-12 143306" src="https://github.com/user-attachments/assets/1b2e1e95-d2d7-4914-9dc4-e4c5d1b8214a" />
+
+
 
 
 Website Interface:
@@ -38,8 +42,12 @@ Website Interface:
 <img width="959" height="558" alt="Screenshot 2026-09-12 143544" src="https://github.com/user-attachments/assets/17cc6fe9-32df-41f0-8f16-68c61f18fec0" />
 
 
+
+
 Dashboard:
 <img width="1440" height="1537" alt="website-dashboard-page" src="https://github.com/user-attachments/assets/b24baf35-c898-49db-99f7-5eb04177ff42" />
+
+
 
 Frontpage:
 <img width="1440" height="900" alt="website-front-page" src="https://github.com/user-attachments/assets/7bda1149-9529-47f6-ba78-0a470f047216" />
