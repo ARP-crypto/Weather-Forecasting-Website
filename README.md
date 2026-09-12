@@ -1,84 +1,51 @@
-A modern weather forecasting website with a Figma-inspired UI, global location search, real-time weather data, hourly and 7-day forecasts, interactive maps, and responsive design.
-Built with HTML, CSS, and JavaScript
+# WeatherCast — GitHub-ready weather forecast
 
-WeatherCast:
+A responsive two-screen weather web app inspired by the supplied Figma design.
 
-WeatherCast is a responsive weather forecasting website inspired by the provided Figma design.
-It allows users to search locations worldwide and view real-time weather conditions, hourly forecasts, 7-day forecasts, weather metrics, and an interactive map.
+## Figma-style flow
 
-Features:
-Global location search
-Current location weather
-Current, hourly, and 7-day forecasts
-Temperature unit toggle
-Humidity, wind, UV, visibility, and precipitation data
-Sunrise and sunset information
-Interactive weather map
-Responsive design
-Two-page Figma-inspired interface
+1. **Landing page** — the first screen presents the branded hero, global search, and a dashboard preview.
+2. **Weather dashboard** — submitting a location search transitions to the second screen and loads live weather for that location.
+3. Searching again from the dashboard keeps the user on the dashboard and refreshes every weather section for the new place.
+4. Clicking the WeatherCast logo returns to the landing screen.
 
-Technologies:
-HTML, CSS, JavaScript, Open-Meteo API, Leaflet, OpenStreetMap, and RainViewer.
+The app also supports the browser URL hashes `#landing` and `#weather` for the two screens.
 
-UI DESIGNED USING FIGMA:
+## Included
 
-<img width="959" height="563" alt="Screenshot 2026-09-12 135743" src="https://github.com/user-attachments/assets/d357ff15-2b18-4591-a3cc-dac3e00cdf12" />
+- Worldwide city / region / postal-code search
+- Live current weather and local time
+- 12-hour hourly timeline
+- 7-day forecast
+- Detailed weather metrics
+- Sunrise / sunset
+- Interactive radar map with temperature and wind modes
+- Celsius / Fahrenheit toggle
+- Browser geolocation
+- Responsive layout
+- Static deployment — no backend required
 
+## Data sources
 
+- Open-Meteo Geocoding API: worldwide location search
+- Open-Meteo Forecast API: weather data
+- RainViewer: radar tiles
+- OpenStreetMap: base map tiles
 
-coding in VSCODE(HTML)
+## GitHub Pages
 
-<img width="959" height="571" alt="Screenshot 2026-09-12 143306" src="https://github.com/user-attachments/assets/1b2e1e95-d2d7-4914-9dc4-e4c5d1b8214a" />
+Upload the contents of this folder to a GitHub repository and enable:
 
+**Settings → Pages → Deploy from branch → main → /(root)**
 
+No build step is required.
 
+## Local development
 
-Website Interface:
+Run any static HTTP server from this folder, for example:
 
-<img width="959" height="599" alt="Screenshot 2026-09-12 143511" src="https://github.com/user-attachments/assets/b08dc200-a07f-4cf7-a277-8b1734cd83a3" />
+```bash
+python -m http.server 8080
+```
 
-<img width="959" height="557" alt="Screenshot 2026-09-12 143603" src="https://github.com/user-attachments/assets/7cd034f9-1214-4bae-9947-56ebd9490a2d" />
-
-<img width="959" height="558" alt="Screenshot 2026-09-12 143544" src="https://github.com/user-attachments/assets/17cc6fe9-32df-41f0-8f16-68c61f18fec0" />
-
-
-
-
-Dashboard:
-<img width="1440" height="1537" alt="website-dashboard-page" src="https://github.com/user-attachments/assets/b24baf35-c898-49db-99f7-5eb04177ff42" />
-
-
-
-Frontpage:
-<img width="1440" height="900" alt="website-front-page" src="https://github.com/user-attachments/assets/7bda1149-9529-47f6-ba78-0a470f047216" />
-
-
-User Flow:
-
-Landing Page
-     | 
-     | Search location / Current location
-     | 
-     v 
-Location Selected
-     |
-     v 
-Weather Dashboard
-     | 
-     +-- Current Weather
-     +-- Hourly Forecast
-     +-- 7-Day Forecast
-     +-- Weather Details
-     +-- Interactive Map
-
-Privacy:
-Location access is optional.
-The website only requests browser location permission when the user chooses to use their current location.
-Users can continue searching for cities manually without granting location access.
-No account or login is required.
-
-Project Objective:
-The objective of WeatherCast is to combine an attractive modern weather interface with practical real-time forecasting features, while keeping the application lightweight, responsive, and easy to deploy.
-
-Author:
-Amulya Ratna Pradhan
+Then open `http://localhost:8080`.

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070819">
+  <meta name="description" content="WeatherCast — live global weather forecasts, radar and detailed metrics.">
+  <title>WeatherCast — Global Weather</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preload" as="image" href="assets/landing-bg.svg">
+</head>
+<body>
+  <div class="page-bg"></div>
+  <section id="landingPage" class="app-page landing-page" aria-labelledby="landingTitle">
+    <div class="landing-stage">
+      <header class="landing-header">
+        <a class="landing-brand" href="#landing" aria-label="Weather Today home"><span class="brand-mark">☼</span><span>Weather Today</span></a>
+        <form id="landingSearchForm" class="landing-searchbar" autocomplete="off">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="landingSearchInput" type="search" placeholder="Search for a city, airport..." aria-label="Search for a location">
+          <button type="submit" aria-label="Search">↵</button>
+          <div id="landingSearchResults" class="search-results" role="listbox"></div>
+        </form>
+        <div class="landing-place"><span id="landingPlace">Current location</span><button type="button" class="mini-unit" data-unit="f">°F</button><button type="button" class="mini-unit" data-unit="c">°C</button></div>
+      </header>
+
+      <main class="landing-artboard">
+        <div class="landing-title-row">
+          <div><div class="tiny-label">WEATHER TODAY</div><h1 id="landingTitle">Current location</h1><p id="landingMeta">Current weather • Detecting your area…</p></div>
+          <span class="live-pill">LIVE REPORT</span>
+        </div>
+
+        <div class="landing-main-grid">
+          <section class="landing-current card-soft">
+            <div class="current-top">
+              <div class="cloud-token" id="landingOrb">◌</div>
+              <div><div class="landing-temp" id="landingTemp">--<span>°C</span></div><div class="landing-condition" id="landingCondition">Loading your local weather…</div></div>
+              <button type="button" class="see-report" id="landingOpenBtn">See Full Report ↗</button>
+            </div>
+            <div class="landing-range"><span id="landingHigh">H: --</span><span id="landingLow">L: --</span></div>
+            <div class="landing-hourly-card">
+              <div class="mini-section-label">Hourly Forecast</div>
+              <div class="landing-hours-grid" id="landingHours"></div>
+            </div>
+          </section>
+
+          <aside class="landing-side-column">
+            <div class="sixday-card card-soft">
+              <div class="mini-section-label">7-Day Forecast</div>
+              <div id="landingDays"></div>
+            </div>
+            <div class="side-metrics-grid">
+              <div class="metric-chip card-soft"><span>UV Index</span><b id="landingUv">--</b><small id="landingUvText">—</small></div>
+              <div class="metric-chip card-soft"><span>Wind Speed</span><b id="landingWind">--</b><small id="landingWindText">—</small></div>
+              <div class="metric-chip card-soft"><span>Humidity</span><b id="landingHumidity">--</b><small>The air right now</small></div>
+              <div class="metric-chip card-soft"><span>Sunset</span><b id="landingSunset">--</b><small id="landingSunrise">Sunrise --</small></div>
+            </div>
+          </aside>
+        </div>
+        <div class="landing-bottom-strip"> <span>Rain</span><span>Wind</span><span>Humidity</span><span>Sunrise / Sunset</span><span>Radar</span><span>7-Day Outlook</span></div>
+      </main>
+
+      <div class="landing-footnote">WeatherCast • Fast forecasts for every place on Earth <span>Powered by Open-Meteo</span></div>
+    </div>
+  </section>
+
+  <section id="dashboardPage" class="app-page dashboard-page hidden-page">
+  <header id="dashboardNav" class="nav">
+    <a class="brand" href="#landing" aria-label="WeatherCast home">
+      <span class="brand-icon" aria-hidden="true">◈</span>
+      <span>WeatherCast</span>
+    </a>
+    <form id="searchForm" class="search" autocomplete="off">
+      <span aria-hidden="true">⌕</span>
+      <input id="searchInput" type="search" placeholder="Search city or zip code..." aria-label="Search city or zip code">
+      <kbd>⌘K</kbd>
+      <div id="searchResults" class="search-results" role="listbox"></div>
+    </form>
+    <div class="nav-right">
+      <span id="navLocation">San Francisco, CA</span>
+      <button id="navUnit" class="nav-unit" type="button">°C</button>
+      <button id="locateBtn" class="locate" type="button" aria-label="Use my location" title="Use my location">⌾</button>
+    </div>
+  </header>
+
+  <main id="top" class="shell">
+    <div id="loading" class="status loading hidden" aria-live="polite"><span class="spinner"></span>Refreshing live weather data…</div>
+    <div id="errorCard" class="status error hidden" aria-live="assertive"><strong>Unable to load weather.</strong><span id="errorText">Try another location or check your connection.</span><button id="retryBtn">Retry</button></div>
+
+    <section class="hero panel">
+      <div class="hero-copy">
+        <div class="hero-eyebrow">CURRENT WEATHER</div>
+        <h1 id="placeName">San Francisco</h1>
+        <div class="hero-time" id="placeMeta">Thursday, October 15 · Local Time: 10:24 AM</div>
+        <div class="hero-temp-line">
+          <span id="temperature" class="hero-temp">68</span><span id="unitMark" class="hero-unit">°F</span>
+          <div class="condition-block"><strong id="conditionText">Scattered Clouds</strong><span id="conditionMeta">Feels like 70° · Humidity 78%</span></div>
+        </div>
+        <div class="hi-low">H <span id="highTemp">72°</span> · L <span id="lowTemp">54°</span></div>
+      </div>
+      <div class="hero-visual">
+        <div id="weatherOrb" class="hero-orb">☁</div>
+        <button id="refreshBtn" class="live-replay" type="button"><span>◌</span> LIVE REFRESH</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Hourly Timeline</h2><span id="hourlySub">Next 12 hours</span></div>
+      <div id="hourlyList" class="hourly"></div>
+    </section>
+
+    <section class="split-section">
+      <div>
+        <div class="section-head"><h2>7-Day Forecast</h2><span>High / Low</span></div>
+        <div id="dailyList" class="daily panel"></div>
+      </div>
+      <div>
+        <div class="section-head"><h2>Detailed Metrics</h2><span>Live</span></div>
+        <div class="metric-grid">
+          <article class="metric panel"><span>Feels Like</span><strong id="mFeels">70°</strong><small>Mostly steady</small></article>
+          <article class="metric panel"><span>Humidity</span><strong id="mHumidity">64%</strong><small>Right now</small></article>
+          <article class="metric panel"><span>Wind Speed</span><strong id="mWind">8 <small>km/h</small></strong><small>Gentle breeze</small></article>
+          <article class="metric panel"><span>UV Index</span><strong id="mUv">3 <small>Mod</small></strong><small id="uvHint">Safe for up to 45 mins</small></article>
+          <article class="metric panel"><span>Visibility</span><strong id="mVisibility">9.0 <small>km</small></strong><small>Clear view</small></article>
+          <article class="metric panel"><span>Pressure</span><strong id="mPressure">29.92 <small>inHg</small></strong><small>Steady</small></article>
+          <article class="metric panel"><span>Dew Point</span><strong id="mDew">56°</strong><small>Comfortable moisture</small></article>
+          <article class="metric panel"><span>Sunrise / Sunset</span><strong id="mSun">6:14 AM</strong><small id="mSunset">Sunset today at 6:42 PM</small></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section map-section">
+      <div class="section-head"><h2>Radar & Weather Map</h2><div class="map-tabs"><button class="active" data-layer="radar">Radar</button><button data-layer="temp">Temperature</button><button data-layer="wind">Wind</button></div></div>
+      <div class="map-wrap panel"><div id="map"></div><div class="map-badge">● Live Radar Tracking Active</div></div>
+      <p class="attribution"><a href="https://www.rainviewer.com/" target="_blank" rel="noreferrer">Radar by RainViewer</a> · Base map © OpenStreetMap contributors</p>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Additional Weather Details</h2></div>
+      <div class="detail-four">
+        <article class="mini panel"><span>Air Quality Index</span><b id="airQuality">24</b><em>Good</em><small>Low particle pollution with clean air quality for outdoor activity.</small></article>
+        <article class="mini panel"><span>Pollen Count</span><b id="pollen">45</b><em>Moderate</em><small>Grass and tree pollen remain moderate through the next few hours.</small></article>
+        <article class="mini panel"><span>Moon Phase</span><b id="moon">82%</b><em>Gibbous</em><small id="moonDesc">Tomorrow's 03:41 AM maximum illumination.</small></article>
+        <article class="mini panel"><span>Precipitation Forecast</span><b id="precipForecast">12%</b><em>Low Chance</em><small>Light rain possible after 3 PM, most of the day stays dry.</small></article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Weather Alerts</h2><span class="count-badge">2 active</span></div>
+      <div class="alerts panel">
+        <div class="alert-row"><span class="alert-dot amber">!</span><div><strong>Wind Advisory</strong><small>Gusts could reach up to 19 mph expected near the coast from 4 PM to 7 PM.</small></div><b>2h left</b></div>
+        <div class="alert-row"><span class="alert-dot blue">◌</span><div><strong>Evening Sprinkle</strong><small>Isolated light showers may develop after 9 PM with no significant accumulation.</small></div><b>Tonight</b></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Clothing & Outfit Suggestions</h2><span class="count-badge green">Comfortable</span></div>
+      <div class="outfits">
+        <article class="outfit panel"><span class="outfit-icon">◒</span><div><strong>Morning</strong><p>Light jacket, breathable top, and sunglasses for cooler sun.</p><div><small>Light jacket</small><small>Sunglasses</small></div></div></article>
+        <article class="outfit panel"><span class="outfit-icon">◐</span><div><strong>Afternoon</strong><p>Layered look with a light sweater for breezy cloud cover.</p><div><small>Sweater</small><small>Windbreaker</small></div></div></article>
+        <article class="outfit panel"><span class="outfit-icon">◑</span><div><strong>Evening</strong><p>Add a warmer layer and umbrella for cooler, cloudy hours.</p><div><small>Warmer layer</small><small>Umbrella</small></div></div></article>
+      </div>
+    </section>
+
+    <footer class="footer"><span>© <span id="year"></span> WeatherCast. Atmospheric Editorial Design.</span><span>Open-Meteo forecast · RainViewer radar · <a href="https://github.com/" target="_blank" rel="noreferrer">GitHub Ready</a></span></footer>
+  </main>  </section>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
