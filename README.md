@@ -54,16 +54,17 @@ Frontpage:
 
 
 User Flow:
+
 Landing Page
-     |
+     | 
      | Search location / Current location
-     |
-     v
+     | 
+     v 
 Location Selected
      |
-     v
+     v 
 Weather Dashboard
-     |
+     | 
      +-- Current Weather
      +-- Hourly Forecast
      +-- 7-Day Forecast
